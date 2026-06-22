@@ -1,0 +1,8 @@
+pytest
+pytest-xdist
+allure-pytest
+selenium
+mysql-connector-python
+webdriver-manager
+requests
+#Docker Desktop

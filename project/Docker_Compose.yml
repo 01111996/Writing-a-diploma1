@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  # Сервис основного приложения (Java)
+  aqa-shop:
+    image: openjdk:17-jdk-slim
+    volumes:
+      - ./aqashop:/app
+    working_dir: /app
+    command: java -jar aqa-shop.jar
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  # Сервис базы данных (MySQL)
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: aqa_shop_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Сервис эмулятора платежного шлюза (Node.js)
+  gate-simulator:
+    build: ./gate-simulator # Предполагается, что там есть Dockerfile
+    ports:
+      - "9999:9999"
+volumes:
+  db_data:
