@@ -1,8 +1,8 @@
-from page.base_pages import BasePages
+from project.page.base_page import BasePage
 from selenium.webdriver.common.by import By
 
 
-class MainPages(BasePages):
+class MainPage(BasePage):
     BUY_BUTTON = (By.ID, 'buy-button') 
     CREDIT_BUTTON = (By.ID, 'credit-button') 
 

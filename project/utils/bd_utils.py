@@ -2,10 +2,12 @@ import mysql.connector
 from mysql.connector import Error
 import configparser
 import os
+import logging
 from contextlib import contextmanager
 
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), '..', 'application.properties')
+logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
 with open(CONFIG_PATH) as f:
@@ -27,14 +29,15 @@ DB_CONFIG = {
 def get_db_connection():
     connection = None
     try:
-        print(f"Пробую подключиться к БД с параметрами: {DB_CONFIG}")
+        logger.info(f"Пробую подключиться к БД с параметрами: {DB_CONFIG}")
         connection = mysql.connector.connect(**DB_CONFIG)
         yield connection
     except Error as e:
-        print(f"Ошибка при подключении к MySQL: {e}")
-        raise 
+        logger.error(f"Ошибка при подключении к MySQL: {e}", exc_info=True)
+        raise
     finally:
         if connection and connection.is_connected():
+            logger.info("Закрываю соединение с БД")
             connection.close()
         
 def check_payment_in_db(order_id: str) -> bool:

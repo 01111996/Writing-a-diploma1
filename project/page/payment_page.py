@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
-from page.base_pages import BasePages
+from project.page.base_page import BasePage
 
-class PaymentPages(BasePages):
+class PaymentPage(BasePage):
     CARD_NUMBER = (By.ID, 'card-number')
     EXPIRY_MONTH = (By.ID, 'expiry-month')
     EXPIRY_YEAR = (By.ID, 'expiry-year')

@@ -27,7 +27,7 @@ services:
 
   # Сервис эмулятора платежного шлюза (Node.js)
   gate-simulator:
-    build: ./gate-simulator # Предполагается, что там есть Dockerfile
+    build: ./gate-simulator 
     ports:
       - "9999:9999"
 volumes:
