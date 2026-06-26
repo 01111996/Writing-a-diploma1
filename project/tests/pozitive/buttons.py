@@ -2,13 +2,14 @@
 #  переключение между кнопками происходит без ошибок. (позитивный сценарий)
 
 import pytest
-from page.main_pages import MainPages
+from project.page.main_page import MainPage
+from project.page.base_page import BasePage
 
 def test_active_buttons(driver):
-    main_pages = MainPages(driver)
-    main_pages.open()
-    buy_button = main_pages.find(MainPages.BUY_BUTTON)
-    credit_button = main_pages.find(MainPages.CREDIT_BUTTON)
+    main_page = MainPage(driver)
+    main_page.open()
+    buy_button = main_page.find(MainPage.BUY_BUTTON)
+    credit_button = main_page.find(MainPage.CREDIT_BUTTON)
     buy_button.click()
     assert "Успешно" in driver.page_source
     credit_button.click()

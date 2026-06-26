@@ -1,3 +1,7 @@
+import os
+import sys
+sys.path.insert(0, '.')
+import allure
 import pytest
 import requests
 import time
@@ -5,6 +9,10 @@ import logging
 from utils.bd_utils import check_payment_in_db
 from utils.browser import create_driver
 from datetime import datetime
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir) 
+sys.path.append(parent_dir)
 
 logging.basicConfig(
     level=logging.INFO, 
@@ -43,9 +51,8 @@ def assert_db_status_success():
 
 #Не прошла оплата по карте
 @pytest.fixture(scope="function")
-def payment_page(driver):
+def payment_page_setup(driver):
     main_page = MainPage(driver)
-    payment_page = PaymentPage(driver)
     main_page.open()
-    main_page.click_buy() 
-    return payment_page 
+    main_page.click_buy()
+    return PaymentPage(driver)
