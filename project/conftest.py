@@ -40,20 +40,16 @@ def pytest_runtest_makereport(item, call):
     rep = outcome.get_result()
     if rep.when == "call" and rep.failed:
         driver = item.funcargs.get("driver")
-        if driver:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            screenshot_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screenshots')
-            os.makedirs(screenshot_dir, exist_ok=True)
-            safe_nodeid = rep.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
-            filename = os.path.join(screenshot_dir, f"screenshot_{timestamp}_{safe_nodeid}.png")
-            try:
-                success = driver_instance.save_screenshot(filename)
-                if success:
-                    allure.attach.file(filename, name="Скриншот ошибки", attachment_type=allure.attachment_type.PNG)
-                else:
-                    logging.warning("WebDriver не смог сохранить скриншот.")
-            except Exception as e:
-                logging.error(f"ALLURE SCREENSHOT ERROR: Не удалось обработать скриншот: {e}")
+        if driver is None:
+            logging.error("Проверьте фикстуры.")
+            return
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"screenshot_{timestamp}_{rep.nodeid.replace('::', '_')}.png"
+        try:
+            driver.save_screenshot(filename)
+            allure.attach.file(filename, ..., attachment_type=allure.attachment_type.PNG)
+        except Exception as e:
+            logging.error(f"Ошибка при сохранении скриншота: {e}")
 
 #Проверка статуса платежа в БД
 @pytest.fixture
