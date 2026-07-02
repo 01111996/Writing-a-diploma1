@@ -4,13 +4,20 @@ services:
   aqa-shop:
     image: openjdk:17-jdk-slim
     volumes:
-      - ./aqashop:/app
+    - ./aqa-shop.jar:/app/aqa-shop.jar  # Правильный путь к jar-файлу
     working_dir: /app
     command: java -jar aqa-shop.jar
     ports:
-      - "8080:8080"
+    - "8080:8080"
     depends_on:
-      - db
+    - db
+    - gate-simulator
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/app
+    - SPRING_DATASOURCE_USERNAME=app
+    - SPRING_DATASOURCE_PASSWORD=pass
+    - SPRING_PAYMENT_GATE_URL=http://gate-simulator:9999/payment
+    - SPRING_CREDIT_GATE_URL=http://gate-simulator:9999/credit
 
   # Сервис базы данных (MySQL)
   db:

@@ -6,4 +6,3 @@ selenium
 mysql-connector-python
 webdriver-manager
 requests
-#Docker Desktop

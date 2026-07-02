@@ -1,28 +1,17 @@
 import mysql.connector
 from mysql.connector import Error
-import configparser
 import os
 import logging
 from contextlib import contextmanager
 
-
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), '..', 'application.properties')
 logger = logging.getLogger(__name__)
 
-config = configparser.ConfigParser()
-with open(CONFIG_PATH) as f:
-    config.read_string("[config]\n" + f.read())
-
-db_url = config.get('config', 'spring.datasource.url')
-address_and_db = db_url.replace('jdbc:mysql://', '')
-host, database = address_and_db.split('/', 1)
-host, port = host.split(':')
 DB_CONFIG = {
-    'database': database,
-    'user': config.get('config', 'spring.datasource.username'),
-    'password': config.get('config', 'spring.datasource.password'),
-    'host': host,
-    'port': port,
+    'database': os.environ.get('DB_NAME'),
+    'user': os.environ.get('DB_USER'),
+    'password': os.environ.get('DB_PASSWORD'),
+    'host': os.environ.get('DB_HOST'),
+    'port': os.environ.get('DB_PORT', '3306'),  # 3306 — порт по умолчанию, если не задан
 }
 
 @contextmanager

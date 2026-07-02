@@ -1,4 +1,5 @@
 from project.page.base_page import BasePage
+from page.payment_page import PaymentPage
 from selenium.webdriver.common.by import By
 
 
@@ -14,5 +15,9 @@ class MainPage(BasePage):
 
     def open(self):
         self.driver.get('http://localhost:8080/')
+
+    def go_to_payment_page(self): 
+        self.click_buy()
+        return PaymentPage(self.driver)
 
     

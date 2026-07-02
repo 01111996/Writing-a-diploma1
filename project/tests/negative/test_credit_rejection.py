@@ -1,6 +1,5 @@
 import pytest
 from project.page.main_page import MainPage
-from project.page.base_page import BasePage
 from project.page.payment_page import PaymentPage
 from data.cards import TestCard
 
@@ -11,7 +10,7 @@ def test_credit_rejection(driver):
     main_pages.click_credit()
 
     payment_page = PaymentPage(driver)
-    payment_page.fill_card(DECLINED_CARD)
+    payment_page.fill_card(TestCard.DECLINED_CARD)
     payment_page.pay()
 
     notification = driver.switch_to.notification

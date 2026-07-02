@@ -3,7 +3,7 @@
 
 import pytest
 from project.page.main_page import MainPage
-from project.page.base_page import BasePage
+from project.page.payment_page import PaymentPage
 
 def test_active_buttons(driver):
     main_page = MainPage(driver)

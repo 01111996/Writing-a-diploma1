@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import sys
 sys.path.insert(0, '.')
 import allure
@@ -10,6 +11,7 @@ from utils.bd_utils import check_payment_in_db
 from utils.browser import create_driver
 from datetime import datetime
 
+load_dotenv()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir) 
 sys.path.append(parent_dir)
@@ -23,9 +25,14 @@ logging.basicConfig(
 
 @pytest.fixture(scope='session')
 def driver():
-    a = create_driver()
-    yield a
-    a.quit()
+    driver_instance = create_driver()
+    if not driver_instance:
+        pytest.exit("Не удалось создать экземпляр WebDriver. Проверьте установку Chrome.", returncode=1)
+    yield driver_instance
+    try:
+        driver_instance.quit()
+    except Exception as e:
+        logging.error(f"Ошибка при закрытии драйвера: {e}")
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -35,9 +42,18 @@ def pytest_runtest_makereport(item, call):
         driver = item.funcargs.get("driver")
         if driver:
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"screenshot_{timestamp}_{rep.nodeid.replace('::', '_')}.png"
-            driver.save_screenshot(filename)
-            allure.attach.file(filename, name="screenshot", attachment_type=allure.attachment_type.PNG)
+            screenshot_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screenshots')
+            os.makedirs(screenshot_dir, exist_ok=True)
+            safe_nodeid = rep.nodeid.replace("::", "_").replace("/", "_").replace("\\", "_")
+            filename = os.path.join(screenshot_dir, f"screenshot_{timestamp}_{safe_nodeid}.png")
+            try:
+                success = driver_instance.save_screenshot(filename)
+                if success:
+                    allure.attach.file(filename, name="Скриншот ошибки", attachment_type=allure.attachment_type.PNG)
+                else:
+                    logging.warning("WebDriver не смог сохранить скриншот.")
+            except Exception as e:
+                logging.error(f"ALLURE SCREENSHOT ERROR: Не удалось обработать скриншот: {e}")
 
 #Проверка статуса платежа в БД
 @pytest.fixture
@@ -49,10 +65,4 @@ def assert_db_status_success():
     is_success = check_payment_in_db(order_id)
     assert is_success, f"Статус в БД не'SUCCESS'. Проверьте, что данные корректны."
 
-#Не прошла оплата по карте
-@pytest.fixture(scope="function")
-def payment_page_setup(driver):
-    main_page = MainPage(driver)
-    main_page.open()
-    main_page.click_buy()
-    return PaymentPage(driver)
+
