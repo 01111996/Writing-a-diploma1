@@ -6,3 +6,4 @@ selenium
 mysql-connector-python
 webdriver-manager
 requests
+python-dotenv
