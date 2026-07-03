@@ -1,87 +1,107 @@
-name: E2E Tests (Pytest + Selenium)
+name: E2E Tests (Docker Compose + Selenium)
 
 on:
   push:
-    branches: [ main ]  
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
-jobs:  
-  test:
+jobs:
+  e2e-test:
     runs-on: ubuntu-latest
-
     
     services:
-      db:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: example
-          MYSQL_DATABASE: aqa_shop_db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-        ports:
-          - 3306:3306
-
-      gate-simulator:
-        image: node:18-alpine
-        entrypoint: ['sh', '-c']
-        args:
-          - |
-            cd /app && npm install && npm start
-        volumes:
-          - ${{ github.workspace }}/gate-simulator:/app
-        ports:
-          - 9999:9999
-        depends_on:
-          - db
-
-      app:
-        image: openjdk:17-jdk-slim
-        working_dir: /app
-        entrypoint: ['java', '-jar', './aqa-shop.jar']
-        volumes:
-          - ${{ github.workspace }}/aqa-shop.jar:/app/aqa-shop.jar:ro
-        ports:
-          - 8080:8080
-        env:
-          SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/app
-          SPRING_DATASOURCE_USERNAME: user
-          SPRING_DATASOURCE_PASSWORD: password
-          SPRING_PAYMENT_GATE_URL: http://gate-simulator:9999/payment
-          SPRING_CREDIT_GATE_URL: http://gate-simulator:9999/credit
-        depends_on:
-          - db
-          - gate-simulator
+      
+      docker:
+        image: docker:dind
+        privileged: true
+        options: --privileged
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.10'
           cache: 'pip'
 
-      - name: Install dependencies
+      
+      - name: Install Chrome and WebDriver
         run: |
-          pip install -r requirements.txt
+          apt-get update
+          apt-get install -y wget gnupg curl unzip jq
+          
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main" > /etc/apt/sources.list.d/google-chrome.list
+          apt-get update
+          apt-get install -y google-chrome-stable
+          
+          
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+.\d+.\d+')
+          DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*})
+          wget -O /tmp/chromedriver.zip "https://storage.googleapis.com/chromedriver/$DRIVER_VERSION/chromedriver_linux64.zip"
+          unzip /tmp/chromedriver.zip -d /usr/local/bin/
+          chmod +x /usr/local/bin/chromedriver
 
-      - name: Wait for application to start
+      - name: Start Docker daemon
+        run: service docker start
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python requirements
+        run: pip install -r requirements.txt
+
+      - name: Build and start infrastructure
+        
+        run: |
+          docker compose up -d --build --wait
+
+      - name: Wait for application to be ready via HTTP
+        
         run: |
           for i in {1..30}; do
-            if curl -f http://localhost:8080; then
-              echo "Application is up!"
+            if curl -f -s http://localhost:8080; then
+              echo "Application is healthy!"
               break
             fi
-            echo "Waiting for application... ($i)"
             sleep 2
           done
-          if ! curl -f http://localhost:8080; then
-            echo "Application failed to start" >&2
+          if ! curl -f -s http://localhost:8080; then
+            echo "Application failed to start. Dumping logs:"
+            docker compose logs aqa-shop
             exit 1
           fi
 
-      - name: Run tests
+      - name: Run Pytest
+        env:
+          BASE_URL: http://localhost:8080
+          # Эти переменные увидит ваш bd_utils.py вместо тех, что лежат в .env
+          DB_HOST: db
+          DB_PORT: 3306
+          DB_NAME: aqa_shop_db
+          DB_USER: user
+          DB_PASSWORD: password
         run: |
-          pytest --alluredir=allure-results
+          pytest --alluredir=allure-results -n auto
+
+      - name: Generate Allure Report
+        if: always()
+        continue-on-error: true
+        run: allure generate allure-results --clean -o allure-report
+
+      - name: Upload Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Results & Screenshots
+          path: |
+            allure-report/
+            *.png
