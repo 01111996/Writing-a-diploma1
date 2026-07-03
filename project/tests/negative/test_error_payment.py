@@ -3,7 +3,7 @@ from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
 from data.cards import TestCard
 from helpers.notification_helper import NotificationHelper
-from project.Assertion import Assertions
+from assertions import Assertions
 
 #Отклонено
 def test_payment_with_declined_card(driver):
