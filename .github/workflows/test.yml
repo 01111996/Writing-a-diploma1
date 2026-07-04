@@ -91,10 +91,17 @@ jobs:
         run: |
           pytest --alluredir=allure-results -n auto
 
-      - name: Generate Allure Report
+      - name: Install and Generate Allure Report
         if: always()
         continue-on-error: true
-        run: allure generate allure-results --clean -o allure-report
+        run: |
+          wget https://raw.githubusercontent.com/qameta/allure-commandline/master/bin/install.sh -O /tmp/install-allure.sh
+          chmod +x /tmp/install-allure.sh
+          /tmp/install-allure.sh 2.25.0 
+
+          export PATH="$PATH:$HOME/allure-2.25.0/bin"
+          
+          allure generate allure-results --clean -o allure-report
 
       - name: Upload Artifacts
         if: always()
