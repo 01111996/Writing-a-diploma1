@@ -28,7 +28,7 @@ jobs:
 
       - name: Create package markers
         run: |
-          touch project/__init__.py
+          mkdir -p project/utils
           touch project/utils/__init__.py
 
       - name: Install dependencies
@@ -46,5 +46,5 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          # Флаг --rootdir=. заставляет Pytest искать модули от корня репозитория
+          
           python -m pytest --rootdir=.

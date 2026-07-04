@@ -83,7 +83,6 @@ jobs:
       - name: Run Pytest
         env:
           BASE_URL: http://localhost:8080
-          # Эти переменные увидит ваш bd_utils.py вместо тех, что лежат в .env
           DB_HOST: db
           DB_PORT: 3306
           DB_NAME: aqa_shop_db
