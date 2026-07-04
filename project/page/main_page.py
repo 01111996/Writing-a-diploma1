@@ -1,5 +1,5 @@
 from project.page.base_page import BasePage
-from page.payment_page import PaymentPage
+from project.page.payment_page import PaymentPage
 from selenium.webdriver.common.by import By
 
 

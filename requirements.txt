@@ -4,7 +4,7 @@ allure-pytest
 allure-python-commons
 selenium
 mysql-connector-python
-webdriver-manager
+webdrivermanager
 requests
 python-dotenv
 flake8

@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      
       docker:
         image: docker:dind
         privileged: true
@@ -28,7 +27,7 @@ jobs:
           cache: 'pip'
 
       
-      - name: Install Chrome and WebDriver
+      - name: Install dependencies and Chrome
         run: |
           apt-get update
           apt-get install -y wget gnupg curl unzip jq
@@ -37,13 +36,6 @@ jobs:
           echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main" > /etc/apt/sources.list.d/google-chrome.list
           apt-get update
           apt-get install -y google-chrome-stable
-          
-          
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+.\d+.\d+')
-          DRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*})
-          wget -O /tmp/chromedriver.zip "https://storage.googleapis.com/chromedriver/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip /tmp/chromedriver.zip -d /usr/local/bin/
-          chmod +x /usr/local/bin/chromedriver
 
       - name: Start Docker daemon
         run: service docker start
@@ -60,12 +52,10 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build and start infrastructure
-        
         run: |
           docker compose up -d --build --wait
 
       - name: Wait for application to be ready via HTTP
-        
         run: |
           for i in {1..30}; do
             if curl -f -s http://localhost:8080; then
@@ -91,6 +81,7 @@ jobs:
         run: |
           pytest --alluredir=allure-results -n auto
 
+      
       - name: Install and Generate Allure Report
         if: always()
         continue-on-error: true
@@ -101,8 +92,9 @@ jobs:
 
           export PATH="$PATH:$HOME/allure-2.25.0/bin"
           
-          allure generate allure-results --clean -o allure-report
+          allure generate ./allure-results --clean -o ./allure-report
 
+      
       - name: Upload Artifacts
         if: always()
         uses: actions/upload-artifact@v4
