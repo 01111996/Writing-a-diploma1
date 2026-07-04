@@ -1,6 +1,6 @@
 import os
-from dotenv import load_dotenv
 import sys
+from dotenv import load_dotenv
 sys.path.insert(0, '.')
 import allure
 import pytest
@@ -14,7 +14,8 @@ from datetime import datetime
 load_dotenv()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir) 
-sys.path.append(parent_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
 
 logging.basicConfig(
     level=logging.INFO, 

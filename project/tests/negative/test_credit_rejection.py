@@ -1,7 +1,7 @@
 import pytest
 from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
-from data.cards import TestCard
+from project.data.cards import TestCard
 
 #•	При оформлении кредита на тур происходит отказ. (негативный сценарий)
 def test_credit_rejection(driver):

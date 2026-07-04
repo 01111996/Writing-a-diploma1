@@ -2,8 +2,8 @@ import pytest
 from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
 from project.data.cards import TestCard
-from helpers.notification_helper import NotificationHelper
-from assertions import Assertions
+from project.helpers.notification_helper import NotificationHelper
+from project.assertions import Assertions
 
 #Отклонено
 def test_payment_with_declined_card(driver):

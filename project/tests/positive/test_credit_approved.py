@@ -3,7 +3,7 @@
 import pytest
 from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
-from data.cards import TestCard
+from project.data.cards import TestCard
 
 def test_credit(driver):
     driver.get("http://localhost:8080")
