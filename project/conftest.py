@@ -7,8 +7,8 @@ import pytest
 import requests
 import time
 import logging
-from utils.bd_utils import check_payment_in_db
-from utils.browser import create_driver
+from project.utils.bd_utils import check_payment_in_db
+from project.utils.browser import create_driver
 from datetime import datetime
 
 load_dotenv()
