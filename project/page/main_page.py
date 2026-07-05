@@ -16,8 +16,13 @@ class MainPage(BasePage):
     def open(self):
         self.driver.get('http://localhost:8080/')
 
-    def go_to_payment_page(self): 
-        self.click_buy()
+    def go_to_payment_page(self, mode="buy"):
+        if mode == "buy":
+            self.click_buy()
+        elif mode == "credit":
+            self.click_credit()
+        else:
+            raise ValueError("Invalid mode")
         return PaymentPage(self.driver)
 
     

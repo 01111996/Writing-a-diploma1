@@ -6,12 +6,10 @@ from project.page.payment_page import PaymentPage
 from project.data.cards import TestCard
 
 def test_credit(driver):
-    driver.get("http://localhost:8080")
-    main_pages = MainPage(driver)
-    main_pages.click_credit()
-    payment_pages = PaymentPage(driver)
-    payment_pages.fill_card(TestCard.APPROVED_CARD)
-    payment_pages.pay()
+    main_page = MainPage(driver)
+    payment_page = main_page.go_to_payment_page(mode="credit")
+    payment_page.fill_card(TestCard.APPROVED_CARD)
+    payment_page.pay()
     assert "Одобрено" in driver.page_source
 
     

@@ -11,10 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      docker:
-        image: docker:dind
-        privileged: true
-        options: --privileged
+        docker:
+          image: docker:dind
+          privileged: true
+          options:
+            args: --privileged
 
     steps:
       - name: Checkout code
@@ -68,34 +69,38 @@ jobs:
         run: |
           docker compose up -d --build --wait
 
-      - name: Wait for application to be ready via HTTP
+      - name: Wait for Infrastructure to be Ready
         run: |
+          # Ждем, пока заработает HTTP-сервер (Spring Boot)
           for i in {1..30}; do
-            if curl -f -s http://localhost:8080; then
+            if curl -f -s "$BASE_URL"; then
               echo "Application is healthy!"
               break
             fi
             sleep 2
           done
-          if ! curl -f -s http://localhost:8080; then
+          if ! curl -f -s "$BASE_URL"; then
             echo "Application failed to start. Dumping logs:"
             docker compose logs aqa-shop
             exit 1
           fi
 
-      - name: Wait for DB to be ready
-        run: |
+          # Ждем, пока заработает MySQL (для миграции схем)
           for i in {1..30}; do
-             if docker exec db mysqladmin ping -h"db" --silent; then
-               echo "MySQL is healthy!"
-               break
-             fi
-             sleep 2
+            if docker exec db mysqladmin ping -h"db" --silent; then
+              echo "Database is healthy!"
+              break
+            fi
+            sleep 2
           done
+          if ! docker exec db mysqladmin ping -h"db" --silent; then
+            echo "Database failed to respond after 60 seconds."
+            exit 1
+          fi
 
       - name: Run Pytest
         env:
-          BASE_URL: http://localhost:8080
+          BASE_URL: http://aqa-shop:8080
           DB_HOST: db
           DB_PORT: 3306
           DB_NAME: aqa_shop_db
