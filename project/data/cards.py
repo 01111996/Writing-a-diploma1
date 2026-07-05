@@ -8,6 +8,7 @@ class TestCard:
     "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "357",
+    "transaction_type": "credit" #для кредита
 }
     #Невалидные данные карты
     DECLINED_CARD = {
@@ -15,7 +16,8 @@ class TestCard:
     "month": "06",
     "year": "15",
     "owner": "Ivan Ivanovich Vetrov",
-    "cvc": "1"
+    "cvc": "1",
+    "transaction_type": "credit" #для кредита
 }
     
     #15 цифр в номере карты

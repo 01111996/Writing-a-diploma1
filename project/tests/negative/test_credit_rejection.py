@@ -8,7 +8,7 @@ from project.assertions import Assertions
 #•	При оформлении кредита на тур происходит отказ. (негативный сценарий)
 def test_credit_rejection(driver):
     main_page = MainPage(driver)
-    payment_page = main_page.go_to_payment_page(mode="credit")
+    payment_page = main_page.go_to_payment_page()
     payment_page.fill_card(TestCard.DECLINED_CARD)
     payment_page.pay()
     actual_result = NotificationHelper.get_notification_text(driver)

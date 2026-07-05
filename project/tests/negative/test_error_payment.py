@@ -63,7 +63,7 @@ def test_payment_with_cvc_card(driver):
 #Пустое CVC
 def test_payment_with_cvc1_card(driver):
     main_page = MainPage(driver)
-    payment_page = MainPage.go_to_payment_page(mode="buy")
+    payment_page = main_page.go_to_payment_page(mode="buy")
     payment_page.fill_card(TestCard.CVC1_CARD)
     payment_page.pay()
     actual_result = NotificationHelper.get_notification_text(driver)

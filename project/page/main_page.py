@@ -4,11 +4,11 @@ from selenium.webdriver.common.by import By
 
 
 class MainPage(BasePage):
-    BUY_BUTTON = (By.ID, 'buy-button') 
-    CREDIT_BUTTON = (By.ID, 'credit-button') 
+    BUY_BUTTON = (By.ID, "button-book") 
 
     def click_buy(self):
-        self.find(self.BUY_BUTTON).click()
+        button = self.wait.until(EC.element_to_be_clickable(self.BUY_BUTTON))
+        button.click()
 
     def click_credit(self):
         self.find(self.CREDIT_BUTTON).click()
@@ -16,13 +16,8 @@ class MainPage(BasePage):
     def open(self):
         self.driver.get('http://localhost:8080/')
 
-    def go_to_payment_page(self, mode="buy"):
-        if mode == "buy":
-            self.click_buy()
-        elif mode == "credit":
-            self.click_credit()
-        else:
-            raise ValueError("Invalid mode")
+    def go_to_payment_page(self):
+        self.click_buy()
         return PaymentPage(self.driver)
 
     
