@@ -11,7 +11,7 @@ def create_driver():
     options.add_argument('--disable-gpu')
     options.add_argument('--start-maximized')
     
-    driver_path = "/usr/local/bin/chromedriver"
+    driver_path = "/usr/bin/chromedriver"
     
     if not os.path.exists(driver_path):
         raise FileNotFoundError(f"ChromeDriver not found at {driver_path}. Check the installation step in test.yml.")
