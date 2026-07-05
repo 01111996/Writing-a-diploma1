@@ -5,7 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class MainPage(BasePage):
-    BUY_BUTTON = (By.ID, "button-book") 
+    BUY_BUTTON = (By.XPATH, "//button[normalize-space()='Купить']")
+    CREDIT_BUTTON = (By.XPATH, "//button[normalize-space()='Купить в кредит']")
 
     def click_buy(self):
         button = self.wait.until(EC.presence_of_element_located(self.BUY_BUTTON))
@@ -13,13 +14,18 @@ class MainPage(BasePage):
         button.click()
 
     def click_credit(self):
-        self.find(self.CREDIT_BUTTON).click()
+        button = self.wait.until(EC.presence_of_element_located(self.CREDIT_BUTTON))
+        button = self.wait.until(EC.element_to_be_clickable(button))
+        button.click()
 
     def open(self):
         self.driver.get('http://localhost:8080/')
-
-    def go_to_payment_page(self):
-        self.click_buy()
+        
+    def go_to_payment_page(self, mode="credit"):
+        if mode == "buy":
+            self.click_buy()
+        else:
+            self.click_credit()
         return PaymentPage(self.driver)
 
     
