@@ -1,7 +1,7 @@
 from project.page.base_page import BasePage
 from project.page.payment_page import PaymentPage
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.expected_conditions import EC
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class MainPage(BasePage):
