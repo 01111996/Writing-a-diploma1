@@ -1,7 +1,6 @@
 import os
 import sys
 from dotenv import load_dotenv
-sys.path.insert(0, '.')
 import allure
 import pytest
 import requests
@@ -17,10 +16,12 @@ parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 
+os.makedirs("logs", exist_ok=True)    
+
 logging.basicConfig(
     level=logging.INFO, 
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    filename='test_automation.log', 
+    filename=f'logs/test_automation_{datetime.now().strftime("%Y-%m-%d")}.log', 
     filemode='a'
 )
 
@@ -29,9 +30,11 @@ def driver():
     driver_instance = create_driver()
     if not driver_instance:
         pytest.exit("Не удалось создать экземпляр WebDriver. Проверьте установку Chrome.", returncode=1)
+    logging.info("WebDriver успешно создан.")
     yield driver_instance
     try:
         driver_instance.quit()
+        logging.info("WebDriver закрыт.")
     except Exception as e:
         logging.error(f"Ошибка при закрытии драйвера: {e}")
 
@@ -44,22 +47,38 @@ def pytest_runtest_makereport(item, call):
         if driver is None:
             logging.error("Проверьте фикстуры.")
             return
+        
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = f"screenshot_{timestamp}_{rep.nodeid.replace('::', '_')}.png"
+        nodeid_safe = rep.nodeid.replace('::', '_').replace('/', '__')
+        filename = f"screenshot_{timestamp}_{nodeid_safe}.png"
+        
         try:
-            driver.save_screenshot(filename)
-            allure.attach.file(filename, ..., attachment_type=allure.attachment_type.PNG)
+            save_path = os.path.join("project", "tests", "screenshots", filename)
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+            
+            driver.save_screenshot(save_path)
+            logging.info(f"Скриншот падения: {save_path}")
+
+            allure.attach.file(
+                source=save_path,
+                name="Скриншот ошибки",
+                attachment_type=allure.attachment_type.PNG
+            )
         except Exception as e:
             logging.error(f"Ошибка при сохранении скриншота: {e}")
+
 
 #Проверка статуса платежа в БД
 @pytest.fixture
 def assert_db_status_success():
     order_id = yield
     if order_id is None:
-        pytest.fail("Не получен order_id для проверки в БД!")
-    print(f"Проверка статуса платежа с order_id: {order_id} в БД")
+        pytest.fail("Не получен order_id для проверки в БД.")
+        
+    print(f"Проверка статуса платежа с order_id: {order_id} в БД.")
+    logging.info(f"Проверка заказа {order_id} в БД.")
+    
     is_success = check_payment_in_db(order_id)
-    assert is_success, f"Статус в БД не'SUCCESS'. Проверьте, что данные корректны."
+    assert is_success, f"Статус в БД не 'SUCCESS'. Проверьте данные."
 
 
