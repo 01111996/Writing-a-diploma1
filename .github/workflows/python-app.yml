@@ -40,10 +40,12 @@ jobs:
 
       - name: Run unit tests with Pytest
         run: |
+          set +e
           python -m pytest --rootdir=. --alluredir=./allure-results \
             --ignore=project/tests/negative \
             --ignore=project/tests/positive
           exit_code=$?
+          set -e
           if [ $exit_code -eq 5 ]; then
             echo "No unit tests collected (only E2E tests exist, which run in a separate workflow) - not failing the build."
             exit 0
