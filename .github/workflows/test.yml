@@ -104,9 +104,8 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
-          wget https://raw.githubusercontent.com/qameta/allure-commandline/master/bin/install.sh -O /tmp/install-allure.sh
-          chmod +x /tmp/install-allure.sh
-          /tmp/install-allure.sh 2.25.0
+          curl -o /tmp/allure-2.25.0.tgz -Ls https://github.com/allure-framework/allure2/releases/download/2.25.0/allure-2.25.0.tgz
+          tar -zxf /tmp/allure-2.25.0.tgz -C "$HOME"
 
           export PATH="$PATH:$HOME/allure-2.25.0/bin"
 
