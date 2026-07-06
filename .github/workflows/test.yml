@@ -40,7 +40,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('gate-simulator/package.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('project/gate-simulator/package.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
@@ -56,10 +56,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build and start infrastructure
+        working-directory: project
         run: |
           docker compose up -d --build --wait
 
       - name: Wait for Infrastructure to be Ready
+        working-directory: project
         env:
           BASE_URL: http://localhost:8080
         run: |
