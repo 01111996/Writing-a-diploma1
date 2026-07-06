@@ -43,6 +43,12 @@ jobs:
           python -m pytest --rootdir=. --alluredir=./allure-results \
             --ignore=project/tests/negative \
             --ignore=project/tests/positive
+          exit_code=$?
+          if [ $exit_code -eq 5 ]; then
+            echo "No unit tests collected (only E2E tests exist, which run in a separate workflow) - not failing the build."
+            exit 0
+          fi
+          exit $exit_code
 
       - name: Generate Allure Report
         if: always()
