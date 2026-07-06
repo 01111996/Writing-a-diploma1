@@ -1,8 +1,7 @@
-version: '3.8'
 services:
   # Сервис основного приложения (Java)
   aqa-shop:
-    image: openjdk:17-jdk-slim
+    image: eclipse-temurin:17-jdk-jammy
     volumes:
     - ./aqa-shop.jar:/app/aqa-shop.jar  # Правильный путь к jar-файлу
     working_dir: /app
