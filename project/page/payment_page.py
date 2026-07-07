@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from project.page.base_page import BasePage
 
 class PaymentPage(BasePage):
-    CARD_NUMBER  = (By.CSS_SELECTOR, "input[placeholder='Номер карты']")
+    CARD_NUMBER  = (By.CSS_SELECTOR, "input[placeholder='0000 0000 0000 0000']")
     EXPIRY_MONTH = (By.CSS_SELECTOR, "input[placeholder='Месяц']")
     EXPIRY_YEAR  = (By.CSS_SELECTOR, "input[placeholder='Год']")
     OWNER_NAME   = (By.CSS_SELECTOR, "input[placeholder='Владелец']")
