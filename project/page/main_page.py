@@ -3,19 +3,16 @@ from project.page.payment_page import PaymentPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-
 class MainPage(BasePage):
-    PAY_BUTTON = (By.XPATH, "//button[contains(., 'Продолжить')]")
+    BUY_BUTTON    = (By.XPATH, "//button[normalize-space()='Купить']")
     CREDIT_BUTTON = (By.XPATH, "//button[normalize-space()='Купить в кредит']")
 
     def click_buy(self):
-        button = self.wait.until(EC.presence_of_element_located(self.BUY_BUTTON))
-        button = self.wait.until(EC.element_to_be_clickable(button))
+        button = self.wait.until(EC.element_to_be_clickable(self.BUY_BUTTON))
         button.click()
 
     def click_credit(self):
-        button = self.wait.until(EC.presence_of_element_located(self.CREDIT_BUTTON))
-        button = self.wait.until(EC.element_to_be_clickable(button))
+        button = self.wait.until(EC.element_to_be_clickable(self.CREDIT_BUTTON))
         button.click()
 
     def open(self):
