@@ -1,3 +1,4 @@
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from project.page.base_page import BasePage
@@ -14,6 +15,7 @@ class PaymentPage(BasePage):
         number_field = self.wait.until(EC.presence_of_element_located(self.CARD_NUMBER))
         number_field.clear()
         number_field.send_keys(card_data["number"])
+        time.sleep(1)
         self.find(self.EXPIRY_MONTH).send_keys(card_data["month"])
         self.find(self.EXPIRY_YEAR).send_keys(card_data["year"])
         self.find(self.OWNER_NAME).send_keys(card_data["owner"])

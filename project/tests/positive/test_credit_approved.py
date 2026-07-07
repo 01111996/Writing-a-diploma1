@@ -5,6 +5,7 @@ from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
 from project.data.cards import TestCard
 from project.helpers.notification_helper import NotificationHelper
+from project.assertions import Assertions
 
 def test_credit(driver):
     main_page = MainPage(driver)
