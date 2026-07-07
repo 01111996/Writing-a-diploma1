@@ -3,20 +3,23 @@ services:
   aqa-shop:
     image: eclipse-temurin:17-jdk-jammy
     volumes:
-    - ./aqa-shop.jar:/app/aqa-shop.jar  # Правильный путь к jar-файлу
+      - ./aqa-shop.jar:/app/aqa-shop.jar
     working_dir: /app
     command: java -jar aqa-shop.jar
     ports:
-    - "8080:8080"
+      - "8080:8080"
+    restart: on-failure
     depends_on:
-    - db
-    - gate-simulator
+      db:
+        condition: service_healthy
+      gate-simulator:
+        condition: service_started
     environment:
-    - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/app
-    - SPRING_DATASOURCE_USERNAME=app
-    - SPRING_DATASOURCE_PASSWORD=pass
-    - SPRING_PAYMENT_GATE_URL=http://gate-simulator:9999/payment
-    - SPRING_CREDIT_GATE_URL=http://gate-simulator:9999/credit
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/app
+      - SPRING_DATASOURCE_USERNAME=app
+      - SPRING_DATASOURCE_PASSWORD=pass
+      - SPRING_PAYMENT_GATE_URL=http://gate-simulator:9999/payment
+      - SPRING_CREDIT_GATE_URL=http://gate-simulator:9999/credit
 
   # Сервис базы данных (MySQL)
   db:
@@ -30,11 +33,18 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "app", "-ppass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   # Сервис эмулятора платежного шлюза (Node.js)
   gate-simulator:
-    build: ./gate-simulator 
+    build: ./gate-simulator
     ports:
       - "9999:9999"
+
 volumes:
   db_data:
