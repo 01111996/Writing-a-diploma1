@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class MainPage(BasePage):
-    BUY_BUTTON = (By.XPATH, "//button[normalize-space()='Купить']")
+    PAY_BUTTON = (By.XPATH, "//button[contains(., 'Продолжить')]")
     CREDIT_BUTTON = (By.XPATH, "//button[normalize-space()='Купить в кредит']")
 
     def click_buy(self):

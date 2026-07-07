@@ -9,7 +9,7 @@ class PaymentPage(BasePage):
     EXPIRY_YEAR  = (By.CSS_SELECTOR, "input[placeholder='Год']")
     OWNER_NAME   = (By.CSS_SELECTOR, "input[placeholder='Владелец']")
     CVC          = (By.CSS_SELECTOR, "input[placeholder='CVC/CVV']")
-    PAY_BUTTON   = (By.CSS_SELECTOR, "button.button_theme_alfa-on-white")
+    PAY_BUTTON   = (By.XPATH, "//button[contains(., 'Продолжить')]")
 
     def fill_card(self, card_data):
         self.find(self.CARD_NUMBER).send_keys(card_data["number"])
