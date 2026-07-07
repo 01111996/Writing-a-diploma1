@@ -22,6 +22,7 @@ class MainPage(BasePage):
         self.driver.get('http://localhost:8080/')
         
     def go_to_payment_page(self, mode="credit"):
+        self.open()
         if mode == "buy":
             self.click_buy()
         else:
