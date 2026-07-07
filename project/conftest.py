@@ -61,6 +61,7 @@ def pytest_runtest_makereport(item, call):
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             
             driver.save_screenshot(save_path)
+            print(f"\n===PAGE SOURCE===\n{driver.page_source[:4000]}\n===END===", flush=True)
             logging.info(f"Скриншот падения: {save_path}")
 
             allure.attach.file(
