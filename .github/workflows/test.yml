@@ -111,4 +111,5 @@ jobs:
             logs/*.log
             project/tests/**/screenshot_*.png
             project/tests/screenshots/**/*
+            project/tests/screenshots/**/*_pagesource.html
             *.png

@@ -25,7 +25,7 @@ logging.basicConfig(
     filemode='a'
 )
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def driver():
     driver_instance = create_driver()
     if not driver_instance:
@@ -54,6 +54,10 @@ def pytest_runtest_makereport(item, call):
         
         try:
             save_path = os.path.join("project", "tests", "screenshots", filename)
+            src_path = save_path.replace(".png", "_pagesource.html")
+            with open(src_path, "w", encoding="utf-8") as f:
+                f.write(driver.page_source)
+            logging.info(f"Page source: {src_path}")
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             
             driver.save_screenshot(save_path)
