@@ -4,10 +4,10 @@ class TestCard:
     #Валидные данные карты
     APPROVED_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
-    "cvc": "357",
+    "cvc": "999",
     "transaction_type": "credit" #для кредита
 }
     #Невалидные данные карты
