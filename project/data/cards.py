@@ -13,8 +13,8 @@ class TestCard:
     #Невалидные данные карты
     DECLINED_CARD = {
     "number": "4444 4444 4444 4442",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "1",
     "transaction_type": "credit" #для кредита
@@ -23,26 +23,26 @@ class TestCard:
     #15 цифр в номере карты
     MISSING_NUMBER_CARD = {
     "number": "4444 4444 4444 444",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
-    "cvc": "357",
+    "cvc": "999",
 }
     
     #без номера карты
     WITHOUT_CARD = {
     "number": " ",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
-    "cvc": "357",   
+    "cvc": "999",   
 }
     
     #CVC из двух цифр
     CVC_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "35",   
 }
@@ -50,8 +50,8 @@ class TestCard:
     #без CVC
     CVC1_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": " ",
 }
@@ -59,26 +59,26 @@ class TestCard:
 #ФИО на русском
     CYRILLIC_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Иван Иванович Ветров",
-    "cvc": "357",
+    "cvc": "999",
 }
     
     #без фамилии
     F_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivan Ivanovich",
-    "cvc": "357",
+    "cvc": "999",
 }
     
     #без имени
     N_CARD = {
     "number": "4444 4444 4444 4441",
-    "month": "06",
-    "year": "27",
+    "month": "08",
+    "year": "22",
     "owner": "Ivanovich Vetrov",
-    "cvc": "357",
+    "cvc": "999",
 }
