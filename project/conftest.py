@@ -47,30 +47,31 @@ def pytest_runtest_makereport(item, call):
         if driver is None:
             logging.error("Проверьте фикстуры.")
             return
-        
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         nodeid_safe = rep.nodeid.replace('::', '_').replace('/', '__')
-        filename = f"screenshot_{timestamp}_{nodeid_safe}.png"
-        
+        screenshots_dir = os.path.join("project", "tests", "screenshots")
+        os.makedirs(screenshots_dir, exist_ok=True)  
+        png_path  = os.path.join(screenshots_dir, f"screenshot_{timestamp}_{nodeid_safe}.png")
+        html_path = os.path.join(screenshots_dir, f"pagesource_{timestamp}_{nodeid_safe}.html")
         try:
-            save_path = os.path.join("project", "tests", "screenshots", filename)
-            src_path = save_path.replace(".png", "_pagesource.html")
-            with open(src_path, "w", encoding="utf-8") as f:
-                f.write(driver.page_source)
-            logging.info(f"Page source: {src_path}")
-            os.makedirs(os.path.dirname(save_path), exist_ok=True)
-            
-            driver.save_screenshot(save_path)
-            print(f"\n===PAGE SOURCE===\n{driver.page_source[:4000]}\n===END===", flush=True)
-            logging.info(f"Скриншот падения: {save_path}")
-
+            page_src = driver.page_source
+            with open(html_path, "w", encoding="utf-8") as f:
+                f.write(page_src)
+            logging.info(f"Page source сохранён: {html_path}")
+            driver.save_screenshot(png_path)
+            logging.info(f"Скриншот: {png_path}")
             allure.attach.file(
-                source=save_path,
+                source=png_path,
                 name="Скриншот ошибки",
                 attachment_type=allure.attachment_type.PNG
             )
+            allure.attach(
+                body=page_src.encode("utf-8"),
+                name="Page Source",
+                attachment_type=allure.attachment_type.HTML
+            )
         except Exception as e:
-            logging.error(f"Ошибка при сохранении скриншота: {e}")
+            logging.error(f"Ошибка при сохранении артефактов: {e}")
 
 
 #Проверка статуса платежа в БД
