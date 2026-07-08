@@ -16,7 +16,7 @@ class TestCard:
     "month": "08",
     "year": "22",
     "owner": "Ivan Ivanovich Vetrov",
-    "cvc": "1",
+    "cvc": "999",
     "transaction_type": "credit" #для кредита
 }
     
