@@ -42,7 +42,7 @@ services:
 
   # Сервис эмулятора платежного шлюза (Node.js)
   gate-simulator:
-    build: ./gate-simulator
+    build: ./project/gate-simulator
     ports:
       - "9999:9999"
 

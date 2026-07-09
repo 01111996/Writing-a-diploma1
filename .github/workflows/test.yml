@@ -47,24 +47,29 @@ jobs:
       - name: Install Python requirements
         run: pip install -r requirements.txt
 
-      - name: Build and start infrastructure
+      - name: Build services (no cache)
         working-directory: project
-        run: docker compose up -d --build
+        run: docker compose build --no-cache gate-simulator
+
+      - name: Start services
+        working-directory: project
+        run: docker compose up -d
 
       - name: Wait for gate-simulator (port 9999)
+        working-directory: project
         run: |
           echo "Waiting for gate-simulator..."
-          for i in $(seq 1 45); do
+          for i in \$(seq 1 45); do
             if curl -sf "http://localhost:9999" > /dev/null 2>&1; then
-              echo "Gate-simulator ready after $((i*2)) seconds"
+              echo "Gate-simulator ready after \$((i*2)) seconds"
               break
             fi
-            echo "  Attempt $i/45..."
+            echo "  Attempt \$i/45..."
             sleep 2
           done
           if ! curl -sf "http://localhost:9999" > /dev/null 2>&1; then
             echo "Gate-simulator failed to start:"
-            cd project && docker compose logs gate-simulator
+            docker compose logs gate-simulator
             exit 1
           fi
 
@@ -75,22 +80,22 @@ jobs:
         run: |
           echo "Waiting for aqa-shop to be stable..."
           HEALTHY=0
-          for i in $(seq 1 90); do
-            if curl -sf "$BASE_URL" > /dev/null 2>&1; then
-              HEALTHY=$((HEALTHY + 1))
+          for i in \$(seq 1 90); do
+            if curl -sf "\$BASE_URL" > /dev/null 2>&1; then
+              HEALTHY=\$((HEALTHY + 1))
               echo "  OK $HEALTHY/3 (attempt $i)"
-              if [ "$HEALTHY" -ge 3 ]; then
+              if [ "\$HEALTHY" -ge 3 ]; then
                 echo "aqa-shop is stable!"
                 break
               fi
             else
               HEALTHY=0
-              echo "  Attempt $i/90 failed — resetting counter"
+              echo "  Attempt \$i/90 failed — resetting counter"
             fi
             sleep 2
           done
 
-          if [ "$HEALTHY" -lt 3 ]; then
+          if [ "\$HEALTHY" -lt 3 ]; then
             echo "aqa-shop did not become stable. Logs:"
             docker compose logs aqa-shop
             docker compose logs gate-simulator
