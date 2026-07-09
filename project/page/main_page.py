@@ -1,3 +1,4 @@
+import os
 from project.page.base_page import BasePage
 from project.page.payment_page import PaymentPage
 from selenium.webdriver.common.by import By
@@ -16,8 +17,9 @@ class MainPage(BasePage):
         button.click()
 
     def open(self):
-        self.driver.get('http://localhost:8080/')
-        
+        base_url = os.getenv("BASE_URL", "http://localhost:8080")
+        self.driver.get(base_url.rstrip("/") + "/")
+
     def go_to_payment_page(self, mode="credit"):
         self.open()
         if mode == "buy":

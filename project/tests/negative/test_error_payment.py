@@ -17,7 +17,7 @@ def test_payment_with_declined_card(driver):
 #•	При покупке тура по дебетовой карте происходит ошибка: 
 # клиент вводит актуальные данные карты, средств на карте достаточно, 
 # но происходит отказ. (негативный сценарий)
-@pytest.mark.xfail(reason="Bug: приложение отклоняет одобренную карту", strict=False) #баг?
+@pytest.mark.xfail(reason="Bug: приложение отклоняет одобренную карту", strict=False)
 def test_payment_error(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")
@@ -29,9 +29,10 @@ def test_payment_error(driver):
 #•	Все поля пустые, нет возможности отправить заявку
 def test_submit_empty_form_shows_error(driver):
     main_page = MainPage(driver)
-    payment_page = main_page.go_to_payment_page()
-    button = payment_page.find(PaymentPage.BUY_BUTTON)
-    assert not button.is_enabled(), "Кнопка дне активна для нажатия без введения данных"
+    payment_page = main_page.go_to_payment_page(mode="buy")
+    payment_page.click_buy_button()
+    actual_result = NotificationHelper.get_field_error_text(driver)
+    Assertions.assert_field_error(actual_result)
 
 #Номер карты менее 16 цифр
 def test_payment_with_missing_number_card(driver):
@@ -79,17 +80,17 @@ def test_payments_with_cyrillic_card(driver):
     Assertions.assert_field_error(actual_result)   
 
 #Пустое поле "Фамилия"
-@pytest.mark.xfail(reason="Приложение не проверяет наличие фамилии", strict=False) #баг?
+@pytest.mark.xfail(reason="Приложение не проверяет наличие фамилии", strict=False)
 def test_payments_with_f_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")
     payment_page.fill_card(TestCard.F_CARD)
     payment_page.click_buy_button()
     actual_result = NotificationHelper.get_field_error_text(driver)
-    Assertions.assert_field_error(actual_result)  
+    Assertions.assert_field_error(actual_result)
 
 #   Пустое поле "Имя"   
-@pytest.mark.xfail(reason="Приложение не проверяет наличие имени", strict=False) #баг?
+@pytest.mark.xfail(reason="Приложение не проверяет наличие имени", strict=False)
 def test_payments_with_n_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")

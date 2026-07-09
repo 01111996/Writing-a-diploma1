@@ -5,7 +5,7 @@ class TestCard:
     APPROVED_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "999",
     "transaction_type": "credit" #для кредита
@@ -14,7 +14,7 @@ class TestCard:
     DECLINED_CARD = {
     "number": "4444 4444 4444 4442",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "999",
     "transaction_type": "credit" #для кредита
@@ -24,7 +24,7 @@ class TestCard:
     MISSING_NUMBER_CARD = {
     "number": "4444 4444 4444 444",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "999",
 }
@@ -33,7 +33,7 @@ class TestCard:
     WITHOUT_CARD = {
     "number": " ",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "999",   
 }
@@ -42,7 +42,7 @@ class TestCard:
     CVC_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "35",   
 }
@@ -51,7 +51,7 @@ class TestCard:
     CVC1_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": " ",
 }
@@ -60,7 +60,7 @@ class TestCard:
     CYRILLIC_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Иван Иванович Ветров",
     "cvc": "999",
 }
@@ -69,7 +69,7 @@ class TestCard:
     F_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivan Ivanovich",
     "cvc": "999",
 }
@@ -78,7 +78,7 @@ class TestCard:
     N_CARD = {
     "number": "4444 4444 4444 4441",
     "month": "08",
-    "year": "22",
+    "year": "27",
     "owner": "Ivanovich Vetrov",
     "cvc": "999",
 }
