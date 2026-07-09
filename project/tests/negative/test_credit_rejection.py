@@ -10,6 +10,6 @@ def test_credit_rejection(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page()
     payment_page.fill_card(TestCard.DECLINED_CARD)
-    payment_page.pay()
+    payment_page.click_credit_button()
     actual_result = NotificationHelper.get_notification_text(driver)
     Assertions.assert_declined_notification(actual_result)

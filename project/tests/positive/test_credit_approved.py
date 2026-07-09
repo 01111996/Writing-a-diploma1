@@ -11,7 +11,7 @@ def test_credit(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page()
     payment_page.fill_card(TestCard.APPROVED_CARD)
-    payment_page.pay()
+    payment_page.click_credit_button()
     actual = NotificationHelper.get_notification_text(driver)
     Assertions.assert_approved_notification(actual)
 
