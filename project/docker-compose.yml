@@ -1,19 +1,16 @@
 services:
   # Сервис основного приложения (Java)
   aqa-shop:
-    image: eclipse-temurin:17-jdk-jammy
+    image: openjdk:17-jdk-slim
     volumes:
-      - ./aqa-shop.jar:/app/aqa-shop.jar
+      - ./aqa-shop.jar:/app/aqa-shop.jar  
     working_dir: /app
     command: java -jar aqa-shop.jar
     ports:
       - "8080:8080"
-    restart: on-failure
     depends_on:
-      db:
-        condition: service_healthy
-      gate-simulator:
-        condition: service_started
+      - db
+      - gate-simulator
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/app
       - SPRING_DATASOURCE_USERNAME=app
@@ -42,8 +39,9 @@ services:
 
   # Сервис эмулятора платежного шлюза (Node.js)
   gate-simulator:
-    context: ./gate-simulator   
-    dockerfile: Dockerfile 
+    build:
+      context: ./gate-simulator   
+      dockerfile: Dockerfile 
     ports:
       - "9999:9999"
 
