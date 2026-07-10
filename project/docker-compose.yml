@@ -44,6 +44,6 @@ services:
       dockerfile: Dockerfile 
     ports:
       - "9999:9999"
-
+    
 volumes:
   db_data:

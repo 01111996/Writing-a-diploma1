@@ -47,29 +47,24 @@ jobs:
       - name: Install Python requirements
         run: pip install -r requirements.txt
 
-      - name: Build services (no cache)
+      - name: Build and start infrastructure
         working-directory: project
-        run: docker compose build --no-cache gate-simulator
-
-      - name: Start services
-        working-directory: project
-        run: docker compose up -d
+        run: docker compose up -d --build
 
       - name: Wait for gate-simulator (port 9999)
-        working-directory: project
         run: |
           echo "Waiting for gate-simulator..."
           for i in $(seq 1 45); do
-            if curl -sf "http://localhost:9999" > /dev/null 2>&1; then
+            if curl -s "http://localhost:9999" -o /dev/null 2>&1; then
               echo "Gate-simulator ready after $((i*2)) seconds"
               break
             fi
             echo "  Attempt $i/45..."
             sleep 2
           done
-          if ! curl -sf "http://localhost:9999" > /dev/null 2>&1; then
+          if ! curl -s "http://localhost:9999" -o /dev/null 2>&1; then
             echo "Gate-simulator failed to start:"
-            docker compose logs gate-simulator
+            cd project && docker compose logs gate-simulator
             exit 1
           fi
 
