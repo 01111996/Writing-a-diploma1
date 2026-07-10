@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 def create_driver():
     options = Options()
@@ -10,6 +9,7 @@ def create_driver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('--window-size=1920,1080')
-    service = Service(ChromeDriverManager().install())
     
+    service = Service('/usr/local/bin/chromedriver')
+
     return webdriver.Chrome(service=service, options=options)

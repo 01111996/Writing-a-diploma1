@@ -24,16 +24,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget gnupg curl unzip jq
-
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update
-
           sudo apt-get install -y google-chrome-stable
-
           sudo rm -rf /var/lib/apt/lists/*
-
+          CHROME_MAJOR=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+          echo "Chrome major version: $CHROME_MAJOR"
+          LATEST=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_MAJOR}")
+          echo "ChromeDriver version to download: $LATEST"
+          curl -sL "https://storage.googleapis.com/chrome-for-testing-public/${LATEST}/linux64/chromedriver-linux64.zip" -o /tmp/chromedriver.zip
+          unzip -q /tmp/chromedriver.zip -d /tmp/
+          sudo mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
+          
           google-chrome --version
+          chromedriver --version
 
       - name: Cache pip dependencies
         uses: actions/cache@v4
