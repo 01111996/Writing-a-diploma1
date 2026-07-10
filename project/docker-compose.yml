@@ -42,7 +42,8 @@ services:
 
   # Сервис эмулятора платежного шлюза (Node.js)
   gate-simulator:
-    build: ./gate-simulator
+    context: ./gate-simulator   
+    dockerfile: Dockerfile 
     ports:
       - "9999:9999"
 
