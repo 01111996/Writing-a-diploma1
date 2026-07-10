@@ -61,7 +61,7 @@ jobs:
           echo "Waiting for gate-simulator..."
           for i in $(seq 1 45); do
             if curl -sf "http://localhost:9999" > /dev/null 2>&1; then
-              echo "Gate-simulator ready after \$((i*2)) seconds"
+              echo "Gate-simulator ready after $((i*2)) seconds"
               break
             fi
             echo "  Attempt $i/45..."
@@ -80,22 +80,22 @@ jobs:
         run: |
           echo "Waiting for aqa-shop to be stable..."
           HEALTHY=0
-          for i in \$(seq 1 90); do
-            if curl -sf "\$BASE_URL" > /dev/null 2>&1; then
-              HEALTHY=\$((HEALTHY + 1))
+          for i in $(seq 1 90); do
+            if curl -sf "$BASE_URL" > /dev/null 2>&1; then
+              HEALTHY=$((HEALTHY + 1))
               echo "  OK $HEALTHY/3 (attempt $i)"
-              if [ "\$HEALTHY" -ge 3 ]; then
+              if [ "$HEALTHY" -ge 3 ]; then
                 echo "aqa-shop is stable!"
                 break
               fi
             else
               HEALTHY=0
-              echo "  Attempt \$i/90 failed — resetting counter"
+              echo "  Attempt $i/90 failed — resetting counter"
             fi
             sleep 2
           done
 
-          if [ "\$HEALTHY" -lt 3 ]; then
+          if [ "$HEALTHY" -lt 3 ]; then
             echo "aqa-shop did not become stable. Logs:"
             docker compose logs aqa-shop
             docker compose logs gate-simulator
