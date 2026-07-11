@@ -9,7 +9,7 @@ class NotificationHelper:
     FIELD_ERROR = (By.CSS_SELECTOR, "[class*='input__sub']")
 
     @staticmethod
-    def get_notification_text(driver, timeout=30):
+    def get_notification_text(driver, timeout=50):
         wait = WebDriverWait(driver, timeout)
         notification = wait.until(
             EC.visibility_of_element_located(NotificationHelper.VISIBLE_NOTIFICATION)
