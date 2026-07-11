@@ -9,7 +9,7 @@ class PaymentPage(BasePage):
     CVC             = (By.XPATH, "//span[text()='CVC/CVV']/following::input[1]")
     BUY_BUTTON      = (By.XPATH, "//button[normalize-space()='Купить']")
     CREDIT_BUTTON   = (By.XPATH, "//button[normalize-space()='Купить в кредит']")
-    CONTINUE_BUTTON = (By.XPATH, "//button[normalize-space()='Продолжить']")
+    CONTINUE_BUTTON = (By.XPATH, "//button[contains(., 'Продолжить')]")
     SUCCESS_MSG     = (By.XPATH, "//*[contains(text(),'Успешно')]")
     ERROR_MSG       = (By.XPATH, "//*[contains(text(),'Ошибка')]")
 
