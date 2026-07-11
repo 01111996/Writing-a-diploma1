@@ -8,3 +8,4 @@ webdriver-manager==4.0.1
 requests
 python-dotenv
 flake8
+pytest-rerunfailures
