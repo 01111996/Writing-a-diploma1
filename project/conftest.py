@@ -54,6 +54,20 @@ def pytest_runtest_makereport(item, call):
         png_path  = os.path.join(screenshots_dir, f"screenshot_{timestamp}_{nodeid_safe}.png")
         html_path = os.path.join(screenshots_dir, f"pagesource_{timestamp}_{nodeid_safe}.html")
         try:
+            browser_logs = driver.get_log('browser')
+            log_path = os.path.join(screenshots_dir, f"consolelog_{timestamp}_{nodeid_safe}.log")
+            with open(log_path, "w", encoding="utf-8") as f:
+                for entry in browser_logs:
+                    f.write(f"{entry['level']}: {entry['message']}\n")
+            logging.info(f"Console log сохранён: {log_path}")
+            allure.attach(
+                body="\n".join(f"{e['level']}: {e['message']}" for e in browser_logs).encode("utf-8"),
+                name="Browser console log",
+                attachment_type=allure.attachment_type.TEXT
+            )
+        except Exception as e:
+            logging.error(f"Не удалось получить browser logs: {e}")
+        try:
             page_src = driver.page_source
             with open(html_path, "w", encoding="utf-8") as f:
                 f.write(page_src)

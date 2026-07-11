@@ -144,4 +144,5 @@ jobs:
           path: |
             project/tests/screenshots/*.png
             project/tests/screenshots/*.html
+            project/tests/screenshots/*.log
             allure-report/
