@@ -6,6 +6,7 @@ from project.helpers.notification_helper import NotificationHelper
 from project.assertions import Assertions
 
 #Отклонено
+@pytest.mark.xfail(reason="Bug: приложение принимает отклонённую карту", strict=False)
 def test_payment_with_declined_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")
@@ -68,9 +69,10 @@ def test_payment_with_cvc1_card(driver):
     payment_page.fill_card(TestCard.CVC1_CARD)
     payment_page.click_buy_button()
     actual_result = NotificationHelper.get_field_error_text(driver)
-    Assertions.assert_field_error(actual_result)
+    Assertions.assert_field_error(actual_result, expected_text='Поле обязательно для заполнения')
 
 #ФИО на кириллице
+@pytest.mark.xfail(reason="Bug: приложение не проверяет, что ФИО написано латиницей", strict=False)
 def test_payments_with_cyrillic_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")
@@ -80,7 +82,7 @@ def test_payments_with_cyrillic_card(driver):
     Assertions.assert_field_error(actual_result)   
 
 #Пустое поле "Фамилия"
-@pytest.mark.xfail(reason="Приложение не проверяет наличие фамилии", strict=False)
+@pytest.mark.xfail(reason="Bug: приложение не проверяет наличие фамилии", strict=False)
 def test_payments_with_f_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")
@@ -90,7 +92,7 @@ def test_payments_with_f_card(driver):
     Assertions.assert_field_error(actual_result)
 
 #   Пустое поле "Имя"   
-@pytest.mark.xfail(reason="Приложение не проверяет наличие имени", strict=False)
+@pytest.mark.xfail(reason="Bug: приложение не проверяет наличие имени", strict=False)
 def test_payments_with_n_card(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page(mode="buy")

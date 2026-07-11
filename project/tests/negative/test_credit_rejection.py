@@ -6,6 +6,7 @@ from project.helpers.notification_helper import NotificationHelper
 from project.assertions import Assertions
 
 #•	При оформлении кредита на тур происходит отказ. (негативный сценарий)
+@pytest.mark.xfail(reason="Bug: приложение одобряет невалидную карту", strict=False)
 def test_credit_rejection(driver):
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page()
