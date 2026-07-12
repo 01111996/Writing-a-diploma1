@@ -136,6 +136,12 @@ jobs:
           export PATH="$PATH:$HOME/allure-2.25.0/bin"
           allure generate ./allure-results --clean -o ./allure-report
 
+      - name: Checkout to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3 
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: './allure-report' 
+
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4

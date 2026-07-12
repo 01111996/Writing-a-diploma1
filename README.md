@@ -5,7 +5,7 @@
 В терминале, в корневой папке cоздать виртуальное окружение Windows: python -m venv venv или macOS/Linux: python3 -m venv venv и Windows: .\venv\Scripts\activate или macOS/Linux: source venv/bin/activate. 
 Установить зависимости pip install -r requirements.txt
 2. Запуск приложения
-Установить Docker Desktop https://docs.docker.com/desktop/release-notes/ (перед установкой необходимо проверить, чтобы компьютер поддерживал данную программу). После установки в терминале выполнить команду для запуска контейнеров docker-compose up -d и проверить статус docker compose ps
+Установить Docker Desktop https://docs.docker.com/desktop/release-notes/ (перед установкой необходимо проверить, чтобы компьютер поддерживал данную программу). После установки запустить приложение и в терминале выполнить команду для запуска контейнеров docker-compose up -d и проверить статус docker compose ps
 3. Заупск тестов (только после активации виртуальной среды)
 Необходимо убедиться, что виртуальное окружение активировано, должно быть указано "(venv)"
 Для запуска тестов в терминале выполнить команду pytest --alluredir=allure-results
