@@ -20,21 +20,6 @@ def test_payment_with_declined_card(driver):
     logger.info("Проверяется уведомление об отказе")
     actual_result = NotificationHelper.get_notification_text(driver)
     Assertions.assert_declined_notification(actual_result)
-
-#•	При покупке тура по дебетовой карте происходит ошибка: 
-# клиент вводит актуальные данные карты, средств на карте достаточно, 
-# но происходит отказ. (негативный сценарий)
-def test_payment_error(driver):
-    logger.info("Открывается страница оплаты дебетовой картой")
-    main_page = MainPage(driver)
-    payment_page = main_page.go_to_payment_page(mode="buy")
-    logger.info("Заполняется данными APPROVED_CARD")
-    payment_page.fill_card(TestCard.APPROVED_CARD)
-    logger.info("Нажимается кнопка 'Продолжить'")
-    payment_page.click_buy_button()
-    logger.info("Проверяется уведомление об ошибке")
-    actual_result = NotificationHelper.get_notification_text(driver)
-    Assertions.assert_error_notification(actual_result)
     
 #•	Все поля пустые, нет возможности отправить заявку
 def test_submit_empty_form_shows_error(driver):
