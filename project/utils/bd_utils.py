@@ -28,10 +28,8 @@ def get_db_connection():
         if connection and connection.is_connected():
             logger.info("Закрытие соединения с БД")
             connection.close()
+
 def check_payment_since(since_ts, expected_status: str, table: str = "payment_entity") -> bool:
-    table:
-        - "payment_entity"       #для дебетовой карты 
-        - "credit_request_entity" #для кредита  
     query = f"SELECT status FROM {table} WHERE created >= %s ORDER BY created ASC LIMIT 1;"
     try:
         with get_db_connection() as conn:
@@ -47,5 +45,6 @@ def check_payment_since(since_ts, expected_status: str, table: str = "payment_en
     except Error as e:
         print(f"Ошибка при выполнении запроса к БД ({table}): {e}")
         return False
+
 
 

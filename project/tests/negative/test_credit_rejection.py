@@ -1,4 +1,5 @@
 import pytest
+import logging
 from project.page.main_page import MainPage
 from project.page.payment_page import PaymentPage
 from project.data.cards import TestCard
