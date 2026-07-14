@@ -47,6 +47,7 @@ def test_submit_empty_form_shows_error(driver):
     actual_result = NotificationHelper.get_field_error_text(driver)
     Assertions.assert_field_error(actual_result)
 
+
 #Номер карты менее 16 цифр
 def test_payment_with_missing_number_card(driver):
     logger.info("Открывается страница оплаты дебетовой картой")
@@ -109,8 +110,8 @@ def test_payments_with_cyrillic_card(driver):
     logger.info("Нажимается кнопка 'Продолжить'")
     payment_page.click_buy_button()
     logger.info("Проверяется уведомление об ошибке")
-    actual_result = NotificationHelper.get_field_error_text(driver)
-    Assertions.assert_field_error(actual_result)   
+    actual_result = NotificationHelper.get_field_error_text_safe(driver)
+    Assertions.assert_field_error(actual_result)  
 
 #Пустое поле "Фамилия"
 def test_payments_with_f_card(driver):
@@ -122,7 +123,7 @@ def test_payments_with_f_card(driver):
     logger.info("Нажимается кнопка 'Продолжить'")
     payment_page.click_buy_button()
     logger.info("Проверяется уведомление об ошибке")
-    actual_result = NotificationHelper.get_field_error_text(driver)
+    actual_result = NotificationHelper.get_field_error_text_safe(driver)
     Assertions.assert_field_error(actual_result)
 
 #   Пустое поле "Имя"   
@@ -135,5 +136,5 @@ def test_payments_with_n_card(driver):
     logger.info("Нажимается кнопка 'Продолжить'")
     payment_page.click_buy_button()
     logger.info("Проверяется уведомление об ошибке")
-    actual_result = NotificationHelper.get_field_error_text(driver)
+    actual_result = NotificationHelper.get_field_error_text_safe(driver)
     Assertions.assert_field_error(actual_result)

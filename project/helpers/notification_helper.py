@@ -2,6 +2,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 
 class NotificationHelper:
@@ -23,3 +24,14 @@ class NotificationHelper:
             EC.visibility_of_element_located(NotificationHelper.FIELD_ERROR)
         )
         return error.text
+    
+    @staticmethod
+    def get_field_error_text_safe(driver, timeout=10):
+        wait = WebDriverWait(driver, timeout)
+        try:
+            error = wait.until(
+                EC.visibility_of_element_located(NotificationHelper.FIELD_ERROR)
+            )
+            return error.text
+        except TimeoutException:
+            return ""
