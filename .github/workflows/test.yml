@@ -138,6 +138,7 @@ jobs:
           allure generate ./allure-results --clean -o ./allure-report
 
       - name: Checkout to gh-pages branch
+        if: always()
         uses: peaceiris/actions-gh-pages@v3 
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
