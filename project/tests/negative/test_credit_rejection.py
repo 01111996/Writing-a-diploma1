@@ -6,6 +6,8 @@ from project.data.cards import TestCard
 from project.helpers.notification_helper import NotificationHelper
 from project.assertions import Assertions
 
+logger = logging.getLogger(__name__)
+
 #•	При оформлении кредита на тур происходит отказ. (негативный сценарий)
 def test_credit_rejection(driver):
     logger.info("Открывается страница для покупки тура в кредит")
