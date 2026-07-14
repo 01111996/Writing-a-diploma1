@@ -14,7 +14,7 @@ class TestCard:
     DECLINED_CARD = {
     "number": "4444 4444 4444 4442",
     "month": "08",
-    "year": "27",
+    "year": "15",
     "owner": "Ivan Ivanovich Vetrov",
     "cvc": "999",
     "transaction_type": "credit" #для кредита

@@ -3,10 +3,10 @@ from project.page.base_page import BasePage
 
 class PaymentPage(BasePage):
     CARD_NUMBER     = (By.CSS_SELECTOR, "input[placeholder='0000 0000 0000 0000']")
-    EXPIRY_MONTH    = (By.XPATH, "//span[text()='Месяц']/following::input[1]")
-    EXPIRY_YEAR     = (By.XPATH, "//span[text()='Год']/following::input[1]")
-    OWNER_NAME      = (By.XPATH, "//span[text()='Владелец']/following::input[1]")
-    CVC             = (By.XPATH, "//span[text()='CVC/CVV']/following::input[1]")
+    EXPIRY_MONTH    = (By.CSS_SELECTOR, "input[placeholder='08']")
+    EXPIRY_YEAR     = (By.CSS_SELECTOR, "input[placeholder='22']")
+    CVC             = (By.CSS_SELECTOR, "input[placeholder='999']")
+    OWNER_NAME      = (By.XPATH, "//span[text()='Владелец']/following::input[1]") 
     BUY_BUTTON      = (By.XPATH, "//button[normalize-space()='Купить']")
     CREDIT_BUTTON   = (By.XPATH, "//button[normalize-space()='Купить в кредит']")
     CONTINUE_BUTTON = (By.XPATH, "//button[contains(., 'Продолжить')]")
@@ -23,5 +23,5 @@ class PaymentPage(BasePage):
     def click_buy_button(self): #для дебетовой карты
         self.find(self.CONTINUE_BUTTON).click()
 
-    def click_credit_button(self): #для тура в кредит
+    def click_credit_button(self): #для кредита
         self.find(self.CONTINUE_BUTTON).click()

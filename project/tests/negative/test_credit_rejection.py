@@ -6,11 +6,14 @@ from project.helpers.notification_helper import NotificationHelper
 from project.assertions import Assertions
 
 #•	При оформлении кредита на тур происходит отказ. (негативный сценарий)
-@pytest.mark.xfail(reason="Bug: приложение одобряет невалидную карту", strict=False)
 def test_credit_rejection(driver):
+    logger.info("Открывается страница для покупки тура в кредит")
     main_page = MainPage(driver)
     payment_page = main_page.go_to_payment_page()
+    logger.info("Заполняется данными DECLINED_CARD")
     payment_page.fill_card(TestCard.DECLINED_CARD)
+    logger.info("Нажимается кнопка 'Продолжить'")
     payment_page.click_credit_button()
+    logger.info("Проверяется уведомление об ошибке")
     actual_result = NotificationHelper.get_notification_text(driver)
     Assertions.assert_declined_notification(actual_result)

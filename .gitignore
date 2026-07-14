@@ -2,5 +2,4 @@ __pycache__/
 *.pyc
 .pytest_cache/
 allure-results/
-.env
 test_automation.log

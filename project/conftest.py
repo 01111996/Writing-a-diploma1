@@ -6,22 +6,22 @@ import pytest
 import requests
 import time
 import logging
-from project.utils.bd_utils import check_payment_in_db
+from project.utils.bd_utils import check_payment_since
 from project.utils.browser import create_driver
 from datetime import datetime
 
 load_dotenv()
 current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir) 
+parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 
-os.makedirs("logs", exist_ok=True)    
+os.makedirs("logs", exist_ok=True)
 
 logging.basicConfig(
-    level=logging.INFO, 
+    level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    filename=f'logs/test_automation_{datetime.now().strftime("%Y-%m-%d")}.log', 
+    filename=f'logs/test_automation_{datetime.now().strftime("%Y-%m-%d")}.log',
     filemode='a'
 )
 
@@ -50,8 +50,8 @@ def pytest_runtest_makereport(item, call):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         nodeid_safe = rep.nodeid.replace('::', '_').replace('/', '__')
         screenshots_dir = os.path.join("project", "tests", "screenshots")
-        os.makedirs(screenshots_dir, exist_ok=True)  
-        png_path  = os.path.join(screenshots_dir, f"screenshot_{timestamp}_{nodeid_safe}.png")
+        os.makedirs(screenshots_dir, exist_ok=True)
+        png_path = os.path.join(screenshots_dir, f"screenshot_{timestamp}_{nodeid_safe}.png")
         html_path = os.path.join(screenshots_dir, f"pagesource_{timestamp}_{nodeid_safe}.html")
         try:
             browser_logs = driver.get_log('browser')
@@ -87,18 +87,13 @@ def pytest_runtest_makereport(item, call):
         except Exception as e:
             logging.error(f"Ошибка при сохранении артефактов: {e}")
 
-
-#Проверка статуса платежа в БД
+# Проверка статуса платежа в БД
 @pytest.fixture
 def assert_db_status_success():
-    order_id = yield
-    if order_id is None:
-        pytest.fail("Не получен order_id для проверки в БД.")
-        
-    print(f"Проверка статуса платежа с order_id: {order_id} в БД.")
-    logging.info(f"Проверка заказа {order_id} в БД.")
-    
-    is_success = check_payment_in_db(order_id)
-    assert is_success, f"Статус в БД не 'SUCCESS'. Проверьте данные."
+    def _check(order_id, expected_status="APPROVED", table="payment_entity"):
+        logging.info(f"Проверка статуса '{expected_status}' в БД ({table}) после отметки {order_id}.")
+        is_success = check_payment_since(order_id, expected_status, table)
+        assert is_success, f"Статус в БД ({table}) не '{expected_status}'."
+    return _check
 
 
