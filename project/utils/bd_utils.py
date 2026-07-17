@@ -29,6 +29,26 @@ def get_db_connection():
             logger.info("Закрытие соединения с БД")
             connection.close()
 
+#для проверки created
+def _get_timestamp_column(conn, table: str) -> str:
+    query = """
+        SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME   = %s
+          AND COLUMN_NAME IN ('created', 'created_at', 'timestamp', 'create_date')
+        LIMIT 1;
+    """
+    with conn.cursor() as cursor:
+        cursor.execute(query, (table,))
+        result = cursor.fetchone()
+    if result:
+        col = result[0]
+        logger.info(f"Колонка временной метки в '{table}': '{col}'")
+        return col
+    logger.warning(f"Колонка временной метки не найдена в '{table}', fallback → 'created'")
+    return "created"
+
 def check_payment_since(since_ts, expected_status: str, table: str = "payment_entity") -> bool:
     query = f"SELECT status FROM {table} WHERE created >= %s ORDER BY created ASC LIMIT 1;"
     try:
