@@ -4,7 +4,7 @@
 
 Установить Python 3.10 https://www.python.org/downloads/
 Для запуска кода можно установить редактор кода, например VSC https://code.visualstudio.com/ или воспользоваться терминалом (cmd, PowerShell) на компьютере.
-Создать файл .env на основе примера файла .env.example
+Создать файл .env на основе примера файла .env.example, указав свои данные (password).
 В терминале, в корневой папке cоздать виртуальное окружение Windows: python -m venv venv или macOS/Linux: python3 -m venv venv и Windows: .\venv\Scripts\activate или macOS/Linux: source venv/bin/activate. 
 Установить зависимости pip install -r requirements.txt
 
