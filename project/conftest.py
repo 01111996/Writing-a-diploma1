@@ -6,7 +6,7 @@ import pytest
 import requests
 import time
 import logging
-from project.utils.bd_utils import check_payment_db
+from project.utils.bd_utils import check_payment_in_db
 from project.utils.browser import create_driver
 from datetime import datetime
 
@@ -92,7 +92,7 @@ def pytest_runtest_makereport(item, call):
 def assert_db_status_success():
     def _check(order_id, expected_status="APPROVED", table="payment_entity"):
         logging.info(f"Проверка статуса '{expected_status}' в БД ({table}) после отметки {order_id}.")
-        is_success = check_payment_db(order_id, expected_status, table)
+        is_success = check_payment_in_db(order_id, expected_status, table)
         assert is_success, f"Статус в БД ({table}) не '{expected_status}'."
     return _check
 
