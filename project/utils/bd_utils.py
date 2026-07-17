@@ -49,7 +49,7 @@ def _get_timestamp_column(conn, table: str) -> str:
     logger.warning(f"Колонка временной метки не найдена в '{table}', fallback → 'created'")
     return "created"
 
-def check_payment_since(since_ts, expected_status: str, table: str = "payment_entity") -> bool:
+def check_payment_db(since_ts, expected_status: str, table: str = "payment_entity") -> bool:
     query = f"SELECT status FROM {table} WHERE created >= %s ORDER BY created ASC LIMIT 1;"
     try:
         with get_db_connection() as conn:
